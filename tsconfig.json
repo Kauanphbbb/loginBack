@@ -5,18 +5,27 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "commonjs",
-    "rootDir": "./src",
-    "resolveJsonModule": true /* Enable importing .json files */,
+    "resolveJsonModule": true,
     "allowJs": true,
     "outDir": "./dist",
     "removeComments": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "noEmit": true,
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@controllers/*": ["src/controllers/*"],
       "@services/*": ["src/services/*"]
-    }
-  }
+    },
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
 }
