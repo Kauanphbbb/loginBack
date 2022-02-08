@@ -1,18 +1,17 @@
+import ErrorHandler from '../utils/ErrorHandler';
 import UserRepository from '../repositories/UserRepository';
 
 class UserService {
-  private userRepository: UserRepository;
-
   private users: Array<Object> = [];
 
-  constructor() {
-    this.userRepository = new UserRepository();
-  }
-
   public async getAll(): Promise<Array<Object>> {
-    this.users = await this.userRepository.getAll();
+    this.users = await UserRepository.getAll();
+
+    if (this.users.length === 0) {
+      throw new ErrorHandler('No users found', 404);
+    }
     return this.users;
   }
 }
 
-export default UserService;
+export default new UserService();
