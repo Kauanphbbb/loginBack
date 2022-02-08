@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import config from 'config';
 import routes from './routes';
+import errorMiddlaware from './middlewares/error.middleware';
 
 class App {
   public express: express.Application;
@@ -12,6 +13,7 @@ class App {
     this.middlewares();
     this.routes();
     App.database();
+    this.initializeErrorHandling();
   }
 
   private middlewares(): void {
@@ -26,6 +28,10 @@ class App {
   static database(): void {
     const db:string = config.get('mongoURL');
     mongoose.connect(db);
+  }
+
+  private initializeErrorHandling() {
+    this.express.use(errorMiddlaware);
   }
 }
 
