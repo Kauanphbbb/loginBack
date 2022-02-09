@@ -32,6 +32,15 @@ class UserRepository {
       throw new ErrorHandler('Something went wrong', 500);
     }
   }
+
+  static async delete(id: string): Promise<Object> {
+    try {
+      const deletedUser = await UserModel.findByIdAndDelete(id);
+      return deletedUser;
+    } catch (error) {
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  }
 }
 
 export default UserRepository;

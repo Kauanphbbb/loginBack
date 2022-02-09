@@ -30,6 +30,11 @@ class UserService {
     const newUser = await UserRepository.create(user);
     return newUser;
   }
+
+  static async delete(id: string): Promise<Object> {
+    const deletedUser = await UserRepository.delete(id);
+    return deletedUser;
+  }
 }
 
 export default UserService;
