@@ -1,47 +1,47 @@
-import ErrorHandler from "../utils/ErrorHandler";
-import UserModel from "../models/UserModel";
-import iUser from "../interfaces/iUser";
+import ErrorHandler from '../utils/ErrorHandler';
+import UserModel from '../models/UserModel';
+import iUser from '../interfaces/iUser';
 
-class UserRepository {
-	public async getAll(): Promise<Array<iUser>> {
-		try {
-			const users = await UserModel.find();
+const UserRepository = {
 
-			return users;
-		} catch (error) {
-			throw new ErrorHandler("Something went wrong", 500);
-		}
-	}
+  getAll: async (): Promise<Array<iUser>> => {
+    try {
+      const users = await UserModel.find();
 
-	public async getByEmail(email: string): Promise<iUser> {
-		try {
-			const user = await UserModel.findOne({ email });
-			return user;
-		} catch (error) {
-			throw new ErrorHandler("Something went wrong", 500);
-		}
-	}
+      return users;
+    } catch (error) {
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  },
 
-	public async create(user: iUser): Promise<iUser> {
-		try {
-			const newUser = new UserModel(user);
-			const savedUser = await newUser.save();
-			return savedUser;
-		} catch (error) {
-			console.log(error);
+  getByEmail: async (email: string): Promise<iUser> => {
+    try {
+      const user = await UserModel.findOne({ email });
+      return user;
+    } catch (error) {
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  },
 
-			throw new ErrorHandler("Something went wrong", 500);
-		}
-	}
+  create: async (user: iUser): Promise<iUser> => {
+    try {
+      const newUser = await UserModel.create(user);
+      return newUser;
+    } catch (error) {
+      console.log(error);
 
-	public async delete(id: string): Promise<iUser> {
-		try {
-			const deletedUser = await UserModel.findByIdAndDelete(id);
-			return deletedUser;
-		} catch (error) {
-			throw new ErrorHandler("Something went wrong", 500);
-		}
-	}
-}
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  },
 
-export default new UserRepository();
+  delete: async (id: string): Promise<iUser> => {
+    try {
+      const deletedUser = await UserModel.findByIdAndDelete(id);
+      return deletedUser;
+    } catch (error) {
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  },
+};
+
+export default UserRepository;
