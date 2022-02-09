@@ -2,19 +2,36 @@ import ErrorHandler from '../utils/ErrorHandler';
 import UserModel from '../models/UserModel';
 
 class UserRepository {
-  private users: Array<Object> = [];
-
-  private user: Object = {};
-
-  public async getAll(): Promise<Array<Object>> {
+  static async getAll(): Promise<Array<Object>> {
     try {
-      this.users = await UserModel.find();
+      const users = await UserModel.find();
 
-      return this.users;
+      return users;
     } catch (error) {
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  }
+
+  static async getByEmail(email: string): Promise<Object> {
+    try {
+      const user = await UserModel.findOne({ email });
+      return user;
+    } catch (error) {
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  }
+
+  static async create(user: Object): Promise<Object> {
+    try {
+      const newUser = new UserModel(user);
+      const savedUser = await newUser.save();
+      return savedUser;
+    } catch (error) {
+      console.log(error);
+
       throw new ErrorHandler('Something went wrong', 500);
     }
   }
 }
 
-export default new UserRepository();
+export default UserRepository;
