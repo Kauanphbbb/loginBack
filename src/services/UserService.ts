@@ -1,40 +1,42 @@
-import ErrorHandler from '../utils/ErrorHandler';
-import UserRepository from '../repositories/UserRepository';
-import IUser from '../interfaces/iUser';
+import ErrorHandler from "../utils/ErrorHandler";
+import UserRepository from "../repositories/UserRepository";
+import IUser from "../interfaces/iUser";
 
 class UserService {
-  static async getAll(): Promise<Array<Object>> {
-    const users = await UserRepository.getAll();
+	
 
-    if (users.length === 0) {
-      throw new ErrorHandler('No users found', 404);
-    }
-    return users;
-  }
+	public async getAll(): Promise<Array<IUser>> {
+		const users = await UserRepository.getAll();
 
-  static async create(user:IUser): Promise<Object> {
-    const {
-      name, lastName, email, password,
-    } = user;
+		if (users.length === 0) {
+			throw new ErrorHandler("No users found", 404);
+		}
+		return users;
+	}
 
-    if (!name || !lastName || !email || !password) {
-      throw new ErrorHandler('Missing fields', 400);
-    }
+	public async create(user:IUser): Promise<IUser> {
+		const {
+			name, lastName, email, password,
+		} = user;
 
-    const userAlreadyExists = await UserRepository.getByEmail(email);
+		if (!name || !lastName || !email || !password) {
+			throw new ErrorHandler("Missing fields", 400);
+		}
 
-    if (userAlreadyExists) {
-      throw new ErrorHandler('User already exists', 400);
-    }
+		const userAlreadyExists = await UserRepository.getByEmail(email);
 
-    const newUser = await UserRepository.create(user);
-    return newUser;
-  }
+		if (userAlreadyExists) {
+			throw new ErrorHandler("User already exists", 400);
+		}
 
-  static async delete(id: string): Promise<Object> {
-    const deletedUser = await UserRepository.delete(id);
-    return deletedUser;
-  }
+		const newUser = await UserRepository.create(user);
+		return newUser;
+	}
+
+	public async delete(id: string): Promise<IUser> {
+		const deletedUser = await UserRepository.delete(id);
+		return deletedUser;
+	}
 }
 
-export default UserService;
+export default new UserService();
