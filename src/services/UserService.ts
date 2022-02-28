@@ -1,21 +1,24 @@
 import ErrorHandler from '../utils/ErrorHandler';
-import UserRepository from '../repositories/UserRepository';
-import IUser from '../interfaces/iUser';
+import { IUserRepository } from '../repositories/IUserRepository';
+import IUser from '../interfaces/IUser';
 
-const UserService = {
+class UserService {
+  private userRepository: IUserRepository;
 
-  getAll: async (): Promise<Array<IUser>> => {
-    console.log('getAll');
+  constructor(userRepository: IUserRepository) {
+    this.userRepository = userRepository;
+  }
 
-    const users = await UserRepository.getAll();
+  async getAll(): Promise<Array<IUser>> {
+    const users = await this.userRepository.getAll();
 
     if (users.length === 0) {
       throw new ErrorHandler('No users found', 404);
     }
     return users;
-  },
+  }
 
-  create: async (user:IUser): Promise<IUser> => {
+  async create(user:IUser): Promise<IUser> {
     const {
       name, lastName, email, password,
     } = user;
@@ -24,20 +27,34 @@ const UserService = {
       throw new ErrorHandler('Missing fields', 400);
     }
 
-    const userAlreadyExists = await UserRepository.getByEmail(email);
+    const userAlreadyExists = await this.userRepository.getByEmail(email);
 
     if (userAlreadyExists) {
       throw new ErrorHandler('User already exists', 400);
     }
 
-    const newUser = await UserRepository.create(user);
+    const newUser = await this.userRepository.create(user);
     return newUser;
-  },
+  }
 
-  delete: async (id: string): Promise<IUser> => {
-    const deletedUser = await UserRepository.delete(id);
+  async delete(id: string): Promise<IUser> {
+    const deletedUser = await this.userRepository.delete(id);
     return deletedUser;
-  },
-};
+  }
+
+  async update(id: string, user: IUser): Promise<IUser> {
+    const userEmailAlreadyExists = await this.userRepository.getByEmail(user.email);
+    const currentUser = await this.userRepository.getById(id);
+
+    if (user.email !== currentUser.email) {
+      if (userEmailAlreadyExists) {
+        throw new ErrorHandler('Email already exists!', 400);
+      }
+    }
+
+    const updatedUser = await this.userRepository.update(id, user);
+    return updatedUser;
+  }
+}
 
 export default UserService;

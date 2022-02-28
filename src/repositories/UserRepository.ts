@@ -1,47 +1,67 @@
 import ErrorHandler from '../utils/ErrorHandler';
 import UserModel from '../models/UserModel';
-import iUser from '../interfaces/iUser';
+import IUser from '../interfaces/IUser';
+import { IUserRepository } from './IUserRepository';
 
-const UserRepository = {
+class UserRepository implements IUserRepository {
+  private userModel = UserModel;
 
-  getAll: async (): Promise<Array<iUser>> => {
+  async getAll(): Promise<Array<IUser>> {
     try {
-      const users = await UserModel.find();
+      const users = await this.userModel.find();
 
       return users;
     } catch (error) {
       throw new ErrorHandler('Something went wrong', 500);
     }
-  },
+  }
 
-  getByEmail: async (email: string): Promise<iUser> => {
+  async getByEmail(email: string): Promise<IUser> | null {
     try {
-      const user = await UserModel.findOne({ email });
+      const user = await this.userModel.findOne({ email });
       return user;
     } catch (error) {
       throw new ErrorHandler('Something went wrong', 500);
     }
-  },
+  }
 
-  create: async (user: iUser): Promise<iUser> => {
+  async getById(id: string): Promise<IUser> | null {
     try {
-      const newUser = await UserModel.create(user);
+      const user = this.userModel.findById(id);
+      return user;
+    } catch (error) {
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  }
+
+  async create(user: IUser): Promise<IUser> {
+    try {
+      const newUser = await this.userModel.create(user);
       return newUser;
     } catch (error) {
       console.log(error);
 
       throw new ErrorHandler('Something went wrong', 500);
     }
-  },
+  }
 
-  delete: async (id: string): Promise<iUser> => {
+  async delete(id: string): Promise<IUser> {
     try {
-      const deletedUser = await UserModel.findByIdAndDelete(id);
+      const deletedUser = await this.userModel.findByIdAndDelete(id);
       return deletedUser;
     } catch (error) {
       throw new ErrorHandler('Something went wrong', 500);
     }
-  },
-};
+  }
+
+  async update(id: string, user: IUser): Promise<IUser> {
+    try {
+      const updatedUser = await this.userModel.findByIdAndUpdate(id, user, { new: true });
+      return updatedUser;
+    } catch (error) {
+      throw new ErrorHandler('Something went wrong', 500);
+    }
+  }
+}
 
 export default UserRepository;
