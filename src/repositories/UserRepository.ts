@@ -56,7 +56,12 @@ class UserRepository implements IUserRepository {
 
   async update(id: string, user: IUser): Promise<IUser> {
     try {
-      const updatedUser = await this.userModel.findByIdAndUpdate(id, user, { new: true });
+      const { email, name, lastName } = user;
+      const updatedUser = await this.userModel.findByIdAndUpdate(
+        id,
+        { email, name, lastName },
+        { new: true },
+      );
       return updatedUser;
     } catch (error) {
       throw new ErrorHandler('Something went wrong', 500);
