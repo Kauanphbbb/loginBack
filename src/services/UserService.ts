@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import ErrorHandler from '../utils/ErrorHandler';
 import { IUserRepository } from '../repositories/IUserRepository';
 import IUser from '../interfaces/IUser';
@@ -33,7 +34,13 @@ class UserService {
       throw new ErrorHandler('User already exists', 400);
     }
 
+    const hash = bcrypt.hashSync(password, 8);
+
+    user.password = hash;
+
     const newUser = await this.userRepository.create(user);
+
+    delete newUser.password;
     return newUser;
   }
 
