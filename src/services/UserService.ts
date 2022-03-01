@@ -40,7 +40,6 @@ class UserService {
 
     const newUser = await this.userRepository.create(user);
 
-    delete newUser.password;
     return newUser;
   }
 

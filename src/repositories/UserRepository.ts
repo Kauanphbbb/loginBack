@@ -18,7 +18,7 @@ class UserRepository implements IUserRepository {
 
   async getByEmail(email: string): Promise<IUser> | null {
     try {
-      const user = await this.userModel.findOne({ email });
+      const user = await this.userModel.findOne({ email }).select('+password');
       return user;
     } catch (error) {
       throw new ErrorHandler('Something went wrong', 500);
