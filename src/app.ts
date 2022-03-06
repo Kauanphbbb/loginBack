@@ -3,15 +3,19 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import config from 'config';
 import routes from './routes';
+import errorMiddlaware from './middlewares/error.middleware';
 
 class App {
   public express: express.Application;
+
+  private dbUrl: string;
 
   public constructor() {
     this.express = express();
     this.middlewares();
     this.routes();
-    App.database();
+    this.database();
+    this.initializeErrorHandling();
   }
 
   private middlewares(): void {
@@ -23,9 +27,13 @@ class App {
     this.express.use(routes);
   }
 
-  static database(): void {
-    const db:string = config.get('mongoURL');
-    mongoose.connect(db);
+  private database(): void {
+    this.dbUrl = config.get('mongoURL');
+    mongoose.connect(this.dbUrl);
+  }
+
+  private initializeErrorHandling() {
+    this.express.use(errorMiddlaware);
   }
 }
 
