@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import ErrorHandler from '../utils/ErrorHandler';
 import { IUserRepository } from '../repositories/IUserRepository';
-import IUser from '../interfaces/IUser';
+import IUser from '../interfaces/iUser';
 
 class UserService {
   private userRepository: IUserRepository;

@@ -1,7 +1,7 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import config from 'config';
 import routes from './routes';
 import errorMiddlaware from './middlewares/error.middleware';
 
@@ -28,7 +28,9 @@ class App {
   }
 
   private database(): void {
-    this.dbUrl = config.get('mongoURL');
+    this.dbUrl = process.env.MONGO_URL;
+    console.log(this.dbUrl);
+
     mongoose.connect(this.dbUrl);
   }
 
