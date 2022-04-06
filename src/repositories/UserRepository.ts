@@ -1,6 +1,6 @@
 import ErrorHandler from '../utils/ErrorHandler';
 import UserModel from '../models/UserModel';
-import IUser from '../interfaces/IUser';
+import IUser from '../interfaces/iUser';
 import { IUserRepository } from './IUserRepository';
 
 class UserRepository implements IUserRepository {
